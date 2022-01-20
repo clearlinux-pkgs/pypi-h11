@@ -1,5 +1,5 @@
 PKG_NAME := pypi-h11
-URL = https://files.pythonhosted.org/packages/bd/e9/72c3dc8f7dd7874812be6a6ec788ba1300bfe31570963a7e788c86280cb9/h11-0.12.0.tar.gz
+URL = https://files.pythonhosted.org/packages/fa/a6/450568b2d62dd633be53f69890332bb0ce78183ffbe1e514c2b3102efff5/h11-0.13.0.tar.gz
 ARCHIVES = 
 
 include ../common/Makefile.common
