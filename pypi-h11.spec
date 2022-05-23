@@ -4,7 +4,7 @@
 #
 Name     : pypi-h11
 Version  : 0.13.0
-Release  : 19
+Release  : 20
 URL      : https://files.pythonhosted.org/packages/fa/a6/450568b2d62dd633be53f69890332bb0ce78183ffbe1e514c2b3102efff5/h11-0.13.0.tar.gz
 Source0  : https://files.pythonhosted.org/packages/fa/a6/450568b2d62dd633be53f69890332bb0ce78183ffbe1e514c2b3102efff5/h11-0.13.0.tar.gz
 Summary  : A pure-Python, bring-your-own-I/O implementation of HTTP/1.1
@@ -52,13 +52,16 @@ python3 components for the pypi-h11 package.
 %prep
 %setup -q -n h11-0.13.0
 cd %{_builddir}/h11-0.13.0
+pushd ..
+cp -a h11-0.13.0 buildavx2
+popd
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1649757269
+export SOURCE_DATE_EPOCH=1653334936
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -69,6 +72,15 @@ export FFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=auto "
 export CXXFLAGS="$CXXFLAGS -O3 -ffat-lto-objects -flto=auto "
 export MAKEFLAGS=%{?_smp_mflags}
 python3 -m build --wheel --skip-dependency-check --no-isolation
+pushd ../buildavx2/
+export CFLAGS="$CFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3 "
+export CXXFLAGS="$CXXFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3 "
+export FFLAGS="$FFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3 "
+export FCFLAGS="$FCFLAGS -m64 -march=x86-64-v3 "
+export LDFLAGS="$LDFLAGS -m64 -march=x86-64-v3 "
+python3 -m build --wheel --skip-dependency-check --no-isolation
+
+popd
 
 %install
 export MAKEFLAGS=%{?_smp_mflags}
@@ -79,6 +91,15 @@ pip install --root=%{buildroot} --no-deps --ignore-installed dist/*.whl
 echo ----[ mark ]----
 cat %{buildroot}/usr/lib/python3*/site-packages/*/requires.txt || :
 echo ----[ mark ]----
+pushd ../buildavx2/
+export CFLAGS="$CFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3 "
+export CXXFLAGS="$CXXFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3 "
+export FFLAGS="$FFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3 "
+export FCFLAGS="$FCFLAGS -m64 -march=x86-64-v3 "
+export LDFLAGS="$LDFLAGS -m64 -march=x86-64-v3 "
+pip install --root=%{buildroot}-v3 --no-deps --ignore-installed dist/*.whl
+popd
+/usr/bin/elf-move.py avx2 %{buildroot}-v3 %{buildroot}/usr/share/clear/optimized-elf/ %{buildroot}/usr/share/clear/filemap/filemap-%{name}
 
 %files
 %defattr(-,root,root,-)
