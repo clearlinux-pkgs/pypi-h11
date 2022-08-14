@@ -4,7 +4,7 @@
 #
 Name     : pypi-h11
 Version  : 0.13.0
-Release  : 23
+Release  : 24
 URL      : https://files.pythonhosted.org/packages/fa/a6/450568b2d62dd633be53f69890332bb0ce78183ffbe1e514c2b3102efff5/h11-0.13.0.tar.gz
 Source0  : https://files.pythonhosted.org/packages/fa/a6/450568b2d62dd633be53f69890332bb0ce78183ffbe1e514c2b3102efff5/h11-0.13.0.tar.gz
 Summary  : A pure-Python, bring-your-own-I/O implementation of HTTP/1.1
